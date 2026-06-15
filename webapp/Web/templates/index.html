@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI &amp; Milieu – Wat kost jouw prompt?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="app" id="app">
+
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <div class="header-bar" id="headerBar">
+        <div class="header-logo">
+            <span class="icon">🌱</span> AI Impact Check
+        </div>
+        <span class="header-badge">Prototype</span>
+    </div>
+
+    <!-- ═══════════════ SCREEN: HOME ═══════════════ -->
+    <div class="screen active" id="screenHome">
+        <div class="home-hero">
+            <span class="mega-icon">🤖💨🌍</span>
+            <h1>Wat kost jouw <span>AI-vraag</span>?</h1>
+            <p class="home-subtitle">
+                Elke keer dat je een vraag stelt aan ChatGPT, DeepSeek of Gemini, gebruikt dat energie en water. Ontdek hoeveel impact jouw vraag heeft.
+            </p>
+        </div>
+
+        <div class="info-cards">
+            <div class="info-card">
+                <span class="ic-icon">⚡</span>
+                <strong>Energie</strong>
+                Datacenters draaien 24/7
+            </div>
+            <div class="info-card">
+                <span class="ic-icon">💧</span>
+                <strong>Water</strong>
+                Voor koeling van servers
+            </div>
+            <div class="info-card">
+                <span class="ic-icon">🌫️</span>
+                <strong>CO₂</strong>
+                Door stroomverbruik
+            </div>
+        </div>
+
+        <div class="qr-teaser">
+            <span class="qr-icon">📱</span>
+            <span>Gescand vanaf de poster? Je bent op de juiste plek! Kies een AI-assistent en ontdek je impact.</span>
+        </div>
+
+        <button class="btn btn-primary" onclick="goToScreen('screenChat')">
+            🚀 Start de check
+        </button>
+        <p class="text-center mt-2" style="font-size:.72rem;color:var(--gray-400);">
+            ⏱️ Duurt ongeveer 1 minuut · Geen account nodig
+        </p>
+    </div>
+
+    <!-- ═══════════════ SCREEN: CHAT ═══════════════ -->
+    <div class="screen" id="screenChat">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+            <button class="btn-back" onclick="goToScreen('screenHome')" aria-label="Terug">←</button>
+            <span style="font-weight:700;font-size:1rem;color:var(--gray-800);">Kies je AI &amp; prompt</span>
+        </div>
+
+        <p style="font-size:.82rem;color:var(--gray-500);margin-bottom:12px;">
+            Elk AI-model heeft een andere impact. Kies het model dat jij wilt testen.
+        </p>
+
+        <!-- Model tabs — filled dynamically by app.js from /api/models -->
+        <div class="model-tabs" id="modelTabs">
+            <div class="model-tab active" style="pointer-events:none;">
+                <span class="spinner" style="border-top-color:var(--gray-400);border-color:var(--gray-200);border-top-color:var(--gray-400);"></span> Laden...
+            </div>
+        </div>
+
+        <!-- Model description — filled when tab selected -->
+        <div class="model-description" id="modelDescription" style="display:none;"></div>
+
+        <!-- Predefined prompts -->
+        <p style="font-size:.78rem;font-weight:600;color:var(--gray-500);margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em;">
+            📋 Kies een voorbeeldvraag
+        </p>
+        <div class="prompt-cards" id="promptCards">
+            <button class="prompt-card" data-prompt="Wat is de hoofdstad van Frankrijk en hoe groot is de stad?">
+                <span class="p-icon">🗺️</span>
+                <span>Wat is de hoofdstad van Frankrijk?</span>
+                <span class="p-badge">kort</span>
+            </button>
+            <button class="prompt-card" data-prompt="Schrijf een recept voor appeltaart met een boodschappenlijstje voor 4 personen.">
+                <span class="p-icon">🥧</span>
+                <span>Recept appeltaart met boodschappenlijst</span>
+                <span class="p-badge">gemiddeld</span>
+            </button>
+            <button class="prompt-card" data-prompt="Leg mij in het Nederlands uit hoe fotosynthese werkt, welke stoffen nodig zijn, en wat het verschil is met verbranding. Geef ook voorbeelden.">
+                <span class="p-icon">🌿</span>
+                <span>Hoe werkt fotosynthese?</span>
+                <span class="p-badge">lang</span>
+            </button>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider-label">of</div>
+
+        <!-- Custom prompt -->
+        <div class="custom-input-wrap">
+            <textarea class="custom-input" id="customPrompt" placeholder="Schrijf hier je eigen vraag..." rows="2" maxlength="300" oninput="updateCharCount()"></textarea>
+            <span class="input-char-count" id="charCount">0 / 300</span>
+        </div>
+
+        <button class="btn btn-primary" id="btnCalculate" onclick="calculateImpact()">
+            🔍 Bereken mijn impact
+        </button>
+        <p class="error-msg" id="promptError"></p>
+    </div>
+
+    <!-- ═══════════════ SCREEN: RESULTS ═══════════════ -->
+    <div class="screen" id="screenResults">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <button class="btn-back" onclick="goToScreen('screenChat')" aria-label="Terug">←</button>
+            <span style="font-weight:700;font-size:1rem;color:var(--gray-800);">Jouw impact</span>
+        </div>
+
+        <!-- Big number -->
+        <div class="impact-big-number">
+            <div class="impact-grams" id="resultCO2">0<span class="unit">g CO₂</span></div>
+            <div class="impact-label" id="resultModel">ChatGPT · 12 woorden</div>
+        </div>
+
+        <!-- Mini cards: energy, water, tokens, time -->
+        <div class="impact-mini-cards">
+            <div class="impact-mini">
+                <div class="val" id="resultEnergy">0 Wh</div>
+                <div class="lbl">⚡ Energie</div>
+            </div>
+            <div class="impact-mini">
+                <div class="val" id="resultWater">0 ml</div>
+                <div class="lbl">💧 Water</div>
+            </div>
+            <div class="impact-mini">
+                <div class="val" id="resultTokens">0</div>
+                <div class="lbl">🔤 Tokens</div>
+            </div>
+            <div class="impact-mini">
+                <div class="val" id="resultTime">0 sec</div>
+                <div class="lbl">⏱️ Denktijd</div>
+            </div>
+        </div>
+
+        <!-- How we calculated this -->
+        <div class="calc-breakdown" id="calcBreakdown">
+            <div class="calc-row"><span>📝 Jouw prompt</span> <span id="bdInputTokens">0 tokens</span></div>
+            <div class="calc-row"><span>💬 AI-antwoord</span> <span id="bdOutputTokens">0 tokens</span></div>
+            <div class="calc-row"><span>🧮 Totaal tokens</span> <span id="bdTotalTokens"><strong>0</strong></span></div>
+            <div class="calc-divider"></div>
+            <div class="calc-row"><span>⚡ Energie per 1000 tokens (<span id="bdModelEnergy">0</span> kWh)</span> <span id="bdRawEnergy">0 Wh</span></div>
+            <div class="calc-row"><span>🏭 Datacenter PUE (koeling overhead)</span> <span>× <span id="bdPUE">0</span></span></div>
+            <div class="calc-row"><span>🖥️ Hardware</span> <span id="bdHardware">—</span></div>
+            <div class="calc-divider"></div>
+            <div class="calc-row"><span>🌍 Netstroom CO₂-intensiteit</span> <span id="bdGrid">0 g/kWh</span></div>
+            <div class="calc-row calc-result"><span>💨 <strong>Totaal CO₂</strong></span> <span id="bdTotalCO2"><strong>0 g</strong></span></div>
+        </div>
+
+        <!-- Daily comparisons -->
+        <div class="comparison-section">
+            <h3>📊 Wat kun je hiermee vergelijken?</h3>
+            <div class="comparison-list" id="comparisonList">
+                <!-- Dynamically filled by JS -->
+            </div>
+        </div>
+
+        <!-- Explanation -->
+        <div class="explanation-box">
+            <div class="ex-title">💡 Waarom kost AI energie?</div>
+            AI draait in grote datacenters vol computers (servers). Die servers gebruiken stroom en worden warm. Voor elke vraag doet de AI een ingewikkelde rekensom. Dat kost energie en water voor koeling. Net als bij een film streamen, maar dan zwaarder.
+        </div>
+
+        <p class="disclaimer">
+            ⚠️ Dit is een schatting. De echte impact hangt af van het model, het datacenter en de energiebron (zon, wind, gas of kolen).
+        </p>
+
+        <!-- Action buttons -->
+        <div class="action-row">
+            <button class="btn btn-outline btn-sm" onclick="goToScreen('screenTips')">💚 Tips</button>
+            <button class="btn btn-outline btn-sm" onclick="goToScreen('screenQuiz')">🧠 Quiz</button>
+            <button class="btn btn-outline btn-sm" onclick="goToScreen('screenSources')">📚 Bronnen</button>
+        </div>
+        <button class="btn btn-outline btn-sm mt-2" style="width:100%;" onclick="goToScreen('screenChat')">
+            🔄 Probeer een andere prompt
+        </button>
+    </div>
+
+    <!-- ═══════════════ SCREEN: TIPS ═══════════════ -->
+    <div class="screen" id="screenTips">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+            <button class="btn-back" onclick="goToScreen('screenResults')" aria-label="Terug">←</button>
+            <span style="font-weight:700;font-size:1rem;color:var(--gray-800);">💚 Tips voor bewust AI-gebruik</span>
+        </div>
+
+        <div class="tip-card">
+            <div class="tip-num">1</div>
+            <div class="tip-body"><strong>Houd je vraag kort en duidelijk.</strong> Een langere prompt kost meer energie. Schrijf alleen wat nodig is.</div>
+        </div>
+        <div class="tip-card">
+            <div class="tip-num">2</div>
+            <div class="tip-body"><strong>Klik niet steeds op 'opnieuw genereren'.</strong> Elke keer dat je een nieuw antwoord vraagt, draait de AI opnieuw. Dat stapelt op.</div>
+        </div>
+        <div class="tip-card">
+            <div class="tip-num">3</div>
+            <div class="tip-body"><strong>Combineer meerdere vragen in één prompt.</strong> In plaats van 3 losse vragen, stel ze samen. Dat bespaart 2 extra berekeningen.</div>
+        </div>
+        <div class="tip-card">
+            <div class="tip-num">4</div>
+            <div class="tip-body"><strong>Gebruik AI met een doel.</strong> Vraag jezelf af: heb ik dit antwoord echt nodig? Soms is een simpele zoekopdracht sneller en zuiniger.</div>
+        </div>
+        <div class="tip-card">
+            <div class="tip-num">5</div>
+            <div class="tip-body"><strong>Kies een kleiner model als dat kan.</strong> Kleinere AI-modellen (zoals DeepSeek) gebruiken vaak minder energie dan de grootste versies.</div>
+        </div>
+
+        <button class="btn btn-outline btn-sm mt-3" style="width:100%;" onclick="goToScreen('screenResults')">
+            ← Terug naar resultaten
+        </button>
+    </div>
+
+    <!-- ═══════════════ SCREEN: QUIZ ═══════════════ -->
+    <div class="screen" id="screenQuiz">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+            <button class="btn-back" onclick="goToScreen('screenResults')" aria-label="Terug">←</button>
+            <span style="font-weight:700;font-size:1rem;color:var(--gray-800);">🧠 Test je kennis</span>
+        </div>
+
+        <p style="font-size:.82rem;color:var(--gray-500);margin-bottom:14px;">
+            Heb je goed opgelet? Beantwoord deze 3 korte vragen.
+        </p>
+
+        <div id="quizContainer">
+            <!-- Filled by JS -->
+        </div>
+
+        <div id="quizScore" style="display:none;text-align:center;padding:16px;background:var(--green-50);border-radius:var(--radius-sm);margin-top:12px;">
+            <span style="font-size:2rem;">🎉</span>
+            <p style="font-weight:700;color:var(--green-700);margin-top:4px;" id="quizScoreText"></p>
+        </div>
+
+        <button class="btn btn-outline btn-sm mt-3" style="width:100%;" onclick="goToScreen('screenResults')">
+            ← Terug naar resultaten
+        </button>
+    </div>
+
+    <!-- ═══════════════ SCREEN: SOURCES ═══════════════ -->
+    <div class="screen" id="screenSources">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+            <button class="btn-back" onclick="goToScreen('screenResults')" aria-label="Terug">←</button>
+            <span style="font-weight:700;font-size:1rem;color:var(--gray-800);">📚 Bronnen &amp; Verantwoording</span>
+        </div>
+
+        <p style="font-size:.82rem;color:var(--gray-500);margin-bottom:12px;">
+            Deze tool gebruikt schattingen op basis van wetenschappelijk onderzoek. Hier zijn onze belangrijkste bronnen:
+        </p>
+
+        <div class="source-card">
+            <div class="src-name">📊 Sasha Luccioni e.a. – "Power Hungry Processing" (2024)</div>
+            <div class="src-desc">Wetenschappelijk onderzoek naar energieverbruik van LLM-inferentie per taak. Basis voor onze energie-per-token schattingen.</div>
+            <a href="https://arxiv.org/abs/2311.16863" target="_blank" rel="noopener">arxiv.org/abs/2311.16863 →</a>
+        </div>
+        <div class="source-card">
+            <div class="src-name">🌍 Electricity Maps – Realtime CO₂-intensiteit per land</div>
+            <div class="src-desc">Open data over koolstofintensiteit van stroomnetten wereldwijd. Onze 350 g/kWh is het NL/EU-gemiddelde.</div>
+            <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">electricitymaps.com →</a>
+        </div>
+        <div class="source-card">
+            <div class="src-name">🏭 Google I/O 2026 – Gemini 3.5 Flash aankondiging (mei 2026)</div>
+            <div class="src-desc">289 tok/s (4× sneller dan GPT-5.5). PUE ~1.09, water 0.24 L/kWh. Google's Environmental Report levert de transparantste datacenter-cijfers.</div>
+            <a href="https://ai.google.dev/gemini-api/docs/models#gemini-3.5-flash" target="_blank" rel="noopener">ai.google.dev/gemini-api →</a>
+        </div>
+        <div class="source-card">
+            <div class="src-name">🔬 DeepSeek-V4 Technical Report (april 2026)</div>
+            <div class="src-desc">284B params (13B actief), 1M context. 27% inference FLOPs van vorige generatie, FP4/FP8 mixed precision. Open-source (MIT).</div>
+            <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro" target="_blank" rel="noopener">huggingface.co/deepseek-ai/DeepSeek-V4-Pro →</a>
+        </div>
+        <div class="source-card">
+            <div class="src-name">📖 OpenAI – GPT-5.5 release (april 2026)</div>
+            <div class="src-desc">1M context, 50× efficiënter per MW dan GPT-5. Tokenkosten 1/35 van voorganger. Hardware: NVIDIA GB200 NVL72 (Blackwell).</div>
+            <a href="https://openai.com/index/" target="_blank" rel="noopener">openai.com/index/ →</a>
+        </div>
+
+        <div class="explanation-box mt-3">
+            <div class="ex-title">🔎 Hoe rekenen wij?</div>
+            <p style="font-size:.8rem;line-height:1.5;">
+                <strong>Onze rekenmachine werkt in 6 stappen:</strong><br><br>
+                <strong>1. Prompt → input tokens:</strong> jouw woorden × ~1,3 = geschat aantal tokens.<br>
+                <strong>2. Output tokens schatten:</strong> op basis van complexiteit (woordenaantal + signaalwoorden zoals "leg uit").<br>
+                <strong>3. Energie:</strong> (totaal tokens ÷ 1000) × energie per 1000 tokens × PUE (datacenter-koeling).<br>
+                <strong>4. CO₂:</strong> kWh × 350 g/kWh (NL/EU stroommix).<br>
+                <strong>5. Water:</strong> kWh × liters per kWh (per model verschillend; DeepSeek gebruikt zeewater ~0L).<br>
+                <strong>6. Denktijd:</strong> output tokens ÷ snelheid (tokens/sec) van het model.<br><br>
+                ⚠️ <strong>Dit is een educatieve schatting.</strong> Model-specs staan in <code>models.json</code> — die kun je zelf aanpassen. De echte uitstoot hangt af van datacenterlocatie, actuele stroommix, serverbelasting, modelversie en output-lengte.
+            </p>
+        </div>
+
+        <button class="btn btn-outline btn-sm mt-3" style="width:100%;" onclick="goToScreen('screenResults')">
+            ← Terug naar resultaten
+        </button>
+    </div>
+
+</div> <!-- /app -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+</html>

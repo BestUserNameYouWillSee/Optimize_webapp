@@ -1,0 +1,45 @@
+{
+  "_comment": "AI Impact Check – Model configuration. Edit this file to add/update models without touching Python code.",
+  "_sources": "Energy estimates based on publicly available research (Hugging Face, ML CO2 Impact, Luccioni et al. 2024). All values are EDUCATIONAL APPROXIMATIONS.",
+  "_grid_carbon_intensity_g_per_kwh": 350,
+  "_note": "Grid intensity is the NL/EU average (~320-400 g CO₂/kWh). For 100% accuracy, use real-time Electricity Maps API.",
+
+  "models": {
+    "chatgpt": {
+      "id": "gpt-5.5",
+      "name": "ChatGPT (GPT-5.5)",
+      "provider": "OpenAI",
+      "energy_kwh_per_1k_tokens": 0.01835,
+      "tokens_per_second": 160,
+      "pue": 1.20,
+      "hardware": "NVIDIA GB200 NVL72 (Blackwell)",
+      "water_l_per_kwh": 1.8,
+      "color": "#10a37f",
+      "description": "Heel slim, goed in moeilijke vragen. Maar als hij diep nadenkt, verbruikt hij meer stroom (ongeveer een kleine lamp die een uur brandt). Snel: 160 woorden per seconde."
+    },
+    "deepseek": {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek-V4-Flash",
+      "provider": "DeepSeek",
+      "energy_kwh_per_1k_tokens": 0.00025,
+      "tokens_per_second": 44,
+      "pue": 1.15,
+      "hardware": "NVIDIA Blackwell / Hopper",
+      "water_l_per_kwh": 0,
+      "color": "#4d6bfe",
+      "description": "Super zuinig: een antwoord gebruikt net zoveel stroom als een ledlampje een paar seconden. Koelt met zeewater (geen drinkwater). Iets langzamer (44 woorden per seconde), maar prima voor dagelijks gebruik."
+    },
+    "gemini": {
+      "id": "gemini-3.5-flash",
+      "name": "Gemini 3.5 Flash",
+      "provider": "Google DeepMind",
+      "energy_kwh_per_1k_tokens": 0.0006,
+      "tokens_per_second": 200,
+      "pue": 1.09,
+      "hardware": "Google TPUv7 Ironwood",
+      "water_l_per_kwh": 0.24,
+      "color": "#4285f4",
+      "description": "Bliksemsnel (200 woorden per seconde) en heel zuinig. Google gebruikt slimme koeling die maar een klein slokje water nodig heeft per eenheid stroom. Ideaal voor snelle antwoorden op alledaagse vragen."
+    }
+  }
+}
