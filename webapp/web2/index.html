@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt Impact</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo" onclick="showPage('home')">
+      <span class="logo-leaf">🌿</span>
+      <span class="logo-text">Prompt<br>Impact</span>
+    </div>
+    <div class="sidebar-nav">
+      <button class="nav-item active" id="nav-home" onclick="navTo('home')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </button>
+    </div>
+    <div class="sidebar-bottom">
+      <button class="nav-item" id="nav-over-ons" onclick="navTo('over-ons')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Over ons
+      </button>
+      <button class="nav-item" id="nav-bronnenlijst" onclick="navTo('bronnenlijst')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Bronnen
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CANVAS -->
+  <div class="main">
+
+    <!-- PAGE: HOME -->
+    <div id="page-home" class="page active">
+      <div class="home-hero">
+        <p class="home-eyebrow">Educatief platform</p>
+        <h1 class="home-title">Hoeveel kost jouw <span class="accent-word">AI-prompt</span>?</h1>
+        <p class="home-sub">Elke vraag aan een AI verbruikt energie, water en stoot CO₂ uit. Ontdek de verborgen impact van jouw gebruik.</p>
+      </div>
+      <p class="choose-label">Kies een AI-assistent om te beginnen</p>
+      <div class="ai-cards">
+        <button class="ai-card" onclick="showAI('chatgpt')">
+          <div class="ai-card-icon chatgpt-icon">
+            <svg width="32" height="32" viewBox="0 0 41 41" fill="none"><path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835A9.964 9.964 0 0 0 18.306.5a10.079 10.079 0 0 0-9.614 6.977 9.967 9.967 0 0 0-6.664 4.834 10.08 10.08 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 7.516 3.35 10.078 10.078 0 0 0 9.617-6.981 9.967 9.967 0 0 0 6.663-4.834 10.079 10.079 0 0 0-1.243-11.813zM22.498 37.886a7.474 7.474 0 0 1-4.799-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 0 0 .655-1.134V19.054l3.366 1.944a.12.12 0 0 1 .066.092v9.299a7.505 7.505 0 0 1-7.49 7.496zM6.392 31.006a7.471 7.471 0 0 1-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 0 0 1.308 0l9.724-5.614v3.888a.12.12 0 0 1-.048.103L16.56 34a7.5 7.5 0 0 1-10.168-3.075v.081zm-2.07-16.377a7.476 7.476 0 0 1 3.919-3.289c0 .068-.004.19-.004.274v9.201a1.294 1.294 0 0 0 .654 1.132l9.723 5.614-3.366 1.944a.12.12 0 0 1-.114.012L7.044 25.2a7.505 7.505 0 0 1-2.722-10.57zm27.658 6.437l-9.724-5.615 3.367-1.943a.121.121 0 0 1 .114-.012l8.048 4.648a7.498 7.498 0 0 1-1.158 13.528v-9.476a1.293 1.293 0 0 0-.647-1.13zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 0 0-1.308 0l-9.723 5.614v-3.888a.12.12 0 0 1 .048-.103l8.082-4.669a7.5 7.5 0 0 1 11.102 7.763v.024zm-21.063 6.929l-3.367-1.944a.12.12 0 0 1-.065-.092v-9.299a7.497 7.497 0 0 1 12.293-5.756 6.94 6.94 0 0 0-.236.134l-7.965 4.6a1.294 1.294 0 0 0-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.499v4.997l-4.331 2.5-4.331-2.5V19.01z" fill="white"/></svg>
+          </div>
+          <span class="ai-card-name">ChatGPT</span>
+          <span class="ai-card-sub">OpenAI</span>
+        </button>
+        <button class="ai-card" onclick="showAI('gemini')">
+          <div class="ai-card-icon gemini-icon">
+            <svg width="30" height="30" viewBox="0 0 28 28" fill="none"><path d="M14 28C14 26.0633 13.6267 24.2433 12.88 22.54C12.1567 20.8367 11.165 19.355 9.905 18.095C8.645 16.835 7.16333 15.8433 5.46 15.12C3.75667 14.3733 1.93667 14 0 14C1.93667 14 3.75667 13.6383 5.46 12.915C7.16333 12.1683 8.645 11.165 9.905 9.905C11.165 8.645 12.1567 7.16333 12.88 5.46C13.6267 3.75667 14 1.93667 14 0C14 1.93667 14.3617 3.75667 15.085 5.46C15.8317 7.16333 16.835 8.645 18.095 9.905C19.355 11.165 20.8367 12.1683 22.54 12.915C24.2433 13.6383 26.0633 14 28 14C26.0633 14 24.2433 14.3733 22.54 15.12C20.8367 15.8433 19.355 16.835 18.095 18.095C16.835 19.355 15.8317 20.8367 15.085 22.54C14.3617 24.2433 14 26.0633 14 28Z" fill="white"/></svg>
+          </div>
+          <span class="ai-card-name">Gemini</span>
+          <span class="ai-card-sub">Google</span>
+        </button>
+        <button class="ai-card" onclick="showAI('deepseek')">
+          <div class="ai-card-icon deepseek-icon">🐋</div>
+          <span class="ai-card-name">DeepSeek</span>
+          <span class="ai-card-sub">DeepSeek AI</span>
+        </button>
+      </div>
+      <div class="home-stat-strip">
+        <div class="stat-item">
+          <span class="stat-num">10×</span>
+          <span class="stat-label">meer water dan een Google-zoekopdracht</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">~0,3 g</span>
+          <span class="stat-label">CO₂ per simpele prompt</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">500 ml</span>
+          <span class="stat-label">water per 20–50 prompts</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: CHATGPT -->
+    <div id="page-chatgpt" class="page ai-page">
+      <div class="ai-page-inner">
+        <button class="back-btn" onclick="showPage('home')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Terug
+        </button>
+        <div class="ai-header">
+          <div class="ai-brand-pill chatgpt-pill">
+            <svg width="22" height="22" viewBox="0 0 41 41" fill="none"><path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835A9.964 9.964 0 0 0 18.306.5a10.079 10.079 0 0 0-9.614 6.977 9.967 9.967 0 0 0-6.664 4.834 10.08 10.08 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 7.516 3.35 10.078 10.078 0 0 0 9.617-6.981 9.967 9.967 0 0 0 6.663-4.834 10.079 10.079 0 0 0-1.243-11.813zM22.498 37.886a7.474 7.474 0 0 1-4.799-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 0 0 .655-1.134V19.054l3.366 1.944a.12.12 0 0 1 .066.092v9.299a7.505 7.505 0 0 1-7.49 7.496z" fill="white"/></svg>
+            ChatGPT
+          </div>
+          <h2 class="ai-tagline">Wat staat er vandaag op de agenda?</h2>
+        </div>
+        <div class="chips-section">
+          <p class="chips-label">Voorbeeldprompts</p>
+          <div class="chips-row">
+            <button class="chip" onclick="usePrompt('chatgpt', 'Maak een afbeelding van een hond.')">Maak een afbeelding van een hond.</button>
+            <button class="chip" onclick="usePrompt('chatgpt', 'Schrijf een motivatiebrief.')">Schrijf een motivatiebrief.</button>
+            <button class="chip" onclick="usePrompt('chatgpt', 'Wat betekent 67?')">Wat betekent 67?</button>
+          </div>
+        </div>
+        <div class="input-wrap">
+          <input type="text" id="chatgpt-input" class="prompt-input" placeholder="Stel een vraag" />
+          <button class="send-btn" onclick="sendPrompt('chatgpt')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: GEMINI -->
+    <div id="page-gemini" class="page ai-page">
+      <div class="ai-page-inner">
+        <button class="back-btn" onclick="showPage('home')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Terug
+        </button>
+        <div class="ai-header">
+          <div class="ai-brand-pill gemini-pill">
+            <svg width="18" height="18" viewBox="0 0 28 28" fill="none"><path d="M14 28C14 26.0633 13.6267 24.2433 12.88 22.54C12.1567 20.8367 11.165 19.355 9.905 18.095C8.645 16.835 7.16333 15.8433 5.46 15.12C3.75667 14.3733 1.93667 14 0 14C1.93667 14 3.75667 13.6383 5.46 12.915C7.16333 12.1683 8.645 11.165 9.905 9.905C11.165 8.645 12.1567 7.16333 12.88 5.46C13.6267 3.75667 14 1.93667 14 0C14 1.93667 14.3617 3.75667 15.085 5.46C15.8317 7.16333 16.835 8.645 18.095 9.905C19.355 11.165 20.8367 12.1683 22.54 12.915C24.2433 13.6383 26.0633 14 28 14C26.0633 14 24.2433 14.3733 22.54 15.12C20.8367 15.8433 19.355 16.835 18.095 18.095C16.835 19.355 15.8317 20.8367 15.085 22.54C14.3617 24.2433 14 26.0633 14 28Z" fill="white"/></svg>
+            Gemini
+          </div>
+          <h2 class="ai-tagline">Laten we aan de slag gaan</h2>
+        </div>
+        <div class="chips-section">
+          <p class="chips-label">Voorbeeldprompts</p>
+          <div class="chips-row">
+            <button class="chip" onclick="usePrompt('gemini', 'Maak een afbeelding van een hond.')">Maak een afbeelding van een hond.</button>
+            <button class="chip" onclick="usePrompt('gemini', 'Schrijf een motivatiebrief.')">Schrijf een motivatiebrief.</button>
+            <button class="chip" onclick="usePrompt('gemini', 'Wat betekent 67?')">Wat betekent 67?</button>
+          </div>
+        </div>
+        <div class="input-wrap">
+          <input type="text" id="gemini-input" class="prompt-input" placeholder="Vraag het aan Gemini" />
+          <button class="send-btn" onclick="sendPrompt('gemini')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: DEEPSEEK -->
+    <div id="page-deepseek" class="page ai-page">
+      <div class="ai-page-inner">
+        <button class="back-btn" onclick="showPage('home')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Terug
+        </button>
+        <div class="ai-header">
+          <div class="ai-brand-pill deepseek-pill">🐋 DeepSeek</div>
+          <h2 class="ai-tagline">Hoe kan ik je helpen?</h2>
+        </div>
+        <div class="chips-section">
+          <p class="chips-label">Voorbeeldprompts</p>
+          <div class="chips-row">
+            <button class="chip" onclick="usePrompt('deepseek', 'Maak een afbeelding van een hond.')">Maak een afbeelding van een hond.</button>
+            <button class="chip" onclick="usePrompt('deepseek', 'Schrijf een motivatiebrief.')">Schrijf een motivatiebrief.</button>
+            <button class="chip" onclick="usePrompt('deepseek', 'Wat betekent 67?')">Wat betekent 67?</button>
+          </div>
+        </div>
+        <div class="input-wrap">
+          <textarea id="deepseek-input" class="prompt-input prompt-textarea" placeholder="Message DeepSeek" rows="3"></textarea>
+          <button class="send-btn send-btn-textarea" onclick="sendPrompt('deepseek')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: CHAT LOADING -->
+    <div id="page-chat" class="page">
+      <div class="chat-topbar">
+        <button class="back-btn" onclick="goBackFromChat()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Terug
+        </button>
+        <div id="chat-brand-bar" class="chat-brand-bar"></div>
+        <div style="width:80px"></div>
+      </div>
+      <div class="chat-area">
+        <div class="chat-messages" id="chat-messages">
+          <div class="user-bubble" id="chat-user-msg"></div>
+          <div class="typing-wrap">
+            <div class="typing-indicator">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-bar">
+          <input type="text" class="prompt-input" placeholder="" disabled />
+          <button class="send-btn" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: KOSTEN -->
+    <div id="page-kosten" class="page">
+      <div class="kosten-top">
+        <button class="back-btn" onclick="goBackFromCost()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Terug
+        </button>
+        <div class="kosten-context">
+          <span class="kosten-prompt-pill" id="kosten-prompt-text"></span>
+          <div id="kosten-brand-logo" class="kosten-ai-badge"></div>
+        </div>
+      </div>
+      <h2 class="kosten-heading">Kosten van deze prompt</h2>
+      <p class="kosten-sub">Dit verbruikte je prompt bij één verzoek aan de AI:</p>
+      <div class="kosten-grid">
+        <div class="kosten-card elec-card">
+          <div class="kosten-card-header">
+            <span class="kosten-icon">⚡</span>
+            <span class="kosten-card-label">Elektriciteit</span>
+          </div>
+          <div class="kosten-val" id="cost-elektriciteit-num"></div>
+          <div class="kosten-equiv" id="cost-elektriciteit-eq"></div>
+        </div>
+        <div class="kosten-card water-card">
+          <div class="kosten-card-header">
+            <span class="kosten-icon">💧</span>
+            <span class="kosten-card-label">Water</span>
+          </div>
+          <div class="kosten-val" id="cost-water-num"></div>
+          <div class="kosten-equiv" id="cost-water-eq"></div>
+        </div>
+        <div class="kosten-card co2-card">
+          <div class="kosten-card-header">
+            <span class="kosten-icon">🌫</span>
+            <span class="kosten-card-label">CO₂</span>
+          </div>
+          <div class="kosten-val" id="cost-co2-num"></div>
+          <div class="kosten-equiv" id="cost-co2-eq"></div>
+        </div>
+      </div>
+      <button class="cta-btn" onclick="showPage('ontdek')">Ontdek wat je hiertegen kan doen →</button>
+    </div>
+
+    <!-- PAGE: ONTDEK -->
+    <div id="page-ontdek" class="page">
+      <button class="back-btn" onclick="showPage('kosten')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Terug
+      </button>
+      <p class="section-eyebrow">Wat kun jij doen?</p>
+      <h2 class="section-heading">Verklein je digitale voetafdruk</h2>
+      <p class="section-sub">Kleine aanpassingen in hoe je AI gebruikt, maken een meetbaar verschil.</p>
+      <div class="ontdek-grid">
+        <div class="ontdek-card">
+          <div class="ontdek-card-icon">🎯</div>
+          <h3 class="ontdek-card-title">Bewust prompten</h3>
+          <div class="ontdek-card-body">
+            <p>Hoe specifieker je prompt, hoe minder rekenkracht nodig is. Geef de AI duidelijke context en vermijd vage of te brede vragen.</p>
+          </div>
+          <p class="ontdek-card-foot">Kortere, duidelijkere prompts = minder energie per antwoord.</p>
+        </div>
+        <div class="ontdek-card">
+          <div class="ontdek-card-icon">🌱</div>
+          <h3 class="ontdek-card-title">Kies groen</h3>
+          <div class="ontdek-card-body">
+            <p>Sommige AI-aanbieders draaien op groene energie of compenseren hun uitstoot. Kies bewust welke AI je gebruikt en wanneer.</p>
+          </div>
+          <p class="ontdek-card-foot">Duurzame alternatieven verkleinen indirect je digitale voetafdruk.</p>
+        </div>
+      </div>
+      <button class="cta-btn" onclick="showPage('quiz')">Test je kennis →</button>
+    </div>
+
+    <!-- PAGE: QUIZ -->
+    <div id="page-quiz" class="page">
+      <button class="back-btn" onclick="showPage('ontdek')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Terug
+      </button>
+      <p class="section-eyebrow">Kennistest</p>
+      <h2 class="section-heading">Weet jij het antwoord?</h2>
+      <div class="quiz-progress">
+        <div class="progress-bar"><div class="progress-fill" id="quiz-progress-fill"></div></div>
+        <span class="progress-label" id="quiz-progress-label">Vraag 1 van 3</span>
+      </div>
+      <div class="quiz-card">
+        <p class="quiz-question" id="quiz-question"></p>
+        <div class="quiz-options" id="quiz-options"></div>
+        <div class="quiz-feedback" id="quiz-feedback"></div>
+        <div class="quiz-nav">
+          <button class="quiz-next-btn" id="quiz-next-btn" onclick="nextQuestion()" style="display:none">
+            Volgende vraag →
+          </button>
+        </div>
+      </div>
+      <button class="cta-btn" id="quiz-finish-btn" onclick="showPage('home')" style="display:none">Opnieuw beginnen →</button>
+    </div>
+
+    <!-- PAGE: OVER ONS -->
+    <div id="page-over-ons" class="page">
+      <button class="back-btn" onclick="showPage('home')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Terug
+      </button>
+      <p class="section-eyebrow">Over het project</p>
+      <h2 class="section-heading">Over ons</h2>
+      <p class="body-text"">
+        AI Impact is ontwikkeld binnen de opleiding HBO-ICT van Zuyd Hogeschool als onderdeel van de casus
+        <strong>Duurzame Technologie in Beeld</strong> binnen het Optimize-project.
+    </p>
+
+    <p class="body-text">
+        Steeds meer mensen maken gebruik van AI-tools zoals ChatGPT, Copilot en Gemini. Hoewel deze technologie
+        veel voordelen biedt, zijn veel gebruikers zich niet bewust van de energie, het waterverbruik en de
+        CO₂-uitstoot die gepaard kunnen gaan met het gebruik van AI. Met AI Impact willen wij deze informatie
+        op een begrijpelijke en toegankelijke manier zichtbaar maken.
+    </p>
+
+    <p class="body-text">
+        Onze oplossing bestaat uit een interactieve webapplicatie waarmee bezoekers inzicht krijgen in de
+        mogelijke milieu-impact van hun AI-gebruik. Door middel van voorbeelden, vergelijkingen en praktische
+        uitleg willen wij bijdragen aan meer bewustwording rondom digitale duurzaamheid.
+    </p>
+
+    <h2>Over de casus</h2>
+
+    <p class="body-text">
+        Deze applicatie is ontwikkeld voor de casus <strong>Duurzame Technologie in Beeld</strong> van het
+        Lectoraat Data Intelligence van Zuyd Hogeschool. Het doel van deze casus is om complexe technologieën,
+        zoals AI en ICT, begrijpelijk te maken voor een breed publiek en tegelijkertijd bewustwording te creëren
+        rondom duurzaamheid.
+    </p>
+
+    <h2>Projectteam</h2>
+
+    <p class="body-text">Deze applicatie is ontwikkeld door:</p>
+
+    <ul class="body-text">
+        <li>Yusuf Isaag</li>
+        <li>Feras Alnabwani</li>
+        <li>Jeffrey Roering</li>
+        <li>Ivan Cheng</li>
+    </ul>
+
+    <p class="body-text">
+        Studenten HBO-ICT aan Zuyd Hogeschool.
+    </p>
+
+    <h2>Disclaimer</h2>
+
+    <p class="body-text">
+        De weergegeven cijfers over energieverbruik, waterverbruik en CO₂-uitstoot zijn indicatieve schattingen
+        gebaseerd op beschikbare onderzoeken en openbare bronnen. De daadwerkelijke impact kan verschillen
+        afhankelijk van het gebruikte AI-model, de infrastructuur en de omvang van de opdracht.
+    </p>
+    </div>
+
+    <!-- PAGE: BRONNENLIJST -->
+    <div id="page-bronnenlijst" class="page">
+      <button class="back-btn" onclick="showPage('home')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Terug
+      </button>
+      <p class="section-eyebrow">Literatuur</p>
+      <h2 class="section-heading">Bronnenlijst</h2>
+      <ul class="source-list">
+        <li class="source-item">
+          <span class="source-tag">Energie</span>
+          Goldman Sachs — <em>AI Power Consumption Report</em>, 2024
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Energie</span>
+          IEA — <em>Electricity 2024 Report</em>
+        </li>
+        <li class="source-item">
+          <span class="source-tag">CO₂</span>
+          Strubell et al. — <em>Energy and Policy Considerations for Deep Learning in NLP</em>, UMass Amherst, 2019
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Water</span>
+          Li et al. — <em>Making AI Less Thirsty</em>, UC Riverside, 2023
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Algemeen</span>
+          Nature — <em>The Carbon Footprint of Machine Learning</em>, 2022
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- /main -->
+
+  <script src="app.js"></script>
+</body>
+</html>
