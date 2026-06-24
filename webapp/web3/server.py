@@ -37,6 +37,11 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/ai-impact")
+def ai_impact():
+    return render_template("index.html")
+
+
 @app.route("/api/models")
 def api_models():
     return jsonify({
@@ -154,6 +159,6 @@ if __name__ == "__main__":
     init_db()
     families = len({m.get("family", "") for m in MODEL_CONFIG.values()})
     print(f"Prompt Impact (web3) — http://127.0.0.1:5001")
-    print(f"   {len(MODEL_CONFIG)} modellen ({families} families) uit models.json")
+    print(f"   {len(MODEL_CONFIG)} bestaande modellen ({families} families) — research-backed data")
     print(f"   Database: {DB_PATH}")
     app.run(debug=False, host="127.0.0.1", port=5001)

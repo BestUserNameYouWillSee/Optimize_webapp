@@ -514,8 +514,165 @@ function escHtml(str) {
   return div.innerHTML;
 }
 
+// =========================== CHART ===========================
+let impactChartData = null;
+let impactChart = null;
+let currentChartCategory = null;
+
+async function loadImpactChartData() {
+  if (impactChartData) return impactChartData;
+  try {
+    const resp = await fetch('/static/ai_impact_data.json');
+    impactChartData = await resp.json();
+    return impactChartData;
+  } catch (err) {
+    console.error('Impact chart data laden mislukt:', err);
+    return null;
+  }
+}
+
+function initImpactChart() {
+  loadImpactChartData().then(function(data) {
+    if (!data || !data.categories || !data.categories.length) return;
+    renderChartTabs(data.categories);
+    selectChartCategory(data.categories[0].id);
+  });
+}
+
+function renderChartTabs(categories) {
+  var tabs = document.getElementById('chart-tabs');
+  if (!tabs) return;
+  tabs.innerHTML = '';
+  categories.forEach(function(cat) {
+    var btn = document.createElement('button');
+    btn.className = 'chart-tab';
+    btn.textContent = cat.label;
+    btn.dataset.catId = cat.id;
+    btn.addEventListener('click', function() { selectChartCategory(cat.id); });
+    tabs.appendChild(btn);
+  });
+}
+
+function selectChartCategory(catId) {
+  if (!impactChartData) return;
+  var cat = impactChartData.categories.find(function(c) { return c.id === catId; });
+  if (!cat) return;
+
+  currentChartCategory = catId;
+
+  // Update tabs
+  document.querySelectorAll('.chart-tab').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.catId === catId);
+  });
+
+  // Update description
+  var subEl = document.getElementById('impact-chart-sub');
+  if (subEl) subEl.textContent = cat.description;
+
+  // Update source
+  var sourceEl = document.getElementById('impact-chart-source');
+  if (sourceEl) sourceEl.textContent = 'Bron: ' + cat.source;
+
+  // Render chart
+  renderChart(cat);
+}
+
+function renderChart(cat) {
+  if (impactChart) {
+    impactChart.destroy();
+    impactChart = null;
+  }
+
+  var ctx = document.getElementById('impactChart');
+  if (!ctx) return;
+
+  var labels = cat.data.map(function(d) { return d.label || d.year; });
+  var values = cat.data.map(function(d) { return d.value; });
+  var isProjected = cat.data.map(function(d) { return d.projected === true; });
+
+  // Determine if we need line or bar
+  var hasProjection = isProjected.some(function(p) { return p; });
+  var useBar = cat.data.length <= 10;
+
+  var pointColors = cat.data.map(function(d, i) {
+    return isProjected[i] ? '#9CA3AF' : cat.color;
+  });
+
+  var datasets = [{
+    label: cat.label + ' (' + cat.unit + ')',
+    data: values,
+    backgroundColor: useBar
+      ? cat.data.map(function(d, i) { return isProjected[i] ? 'rgba(156,163,175,0.4)' : cat.bgColor; })
+      : cat.bgColor,
+    borderColor: cat.color,
+    borderWidth: 2.5,
+    pointBackgroundColor: pointColors,
+    pointBorderColor: pointColors,
+    pointRadius: 5,
+    pointHoverRadius: 8,
+    tension: 0.3,
+    fill: !useBar,
+    // Use dashed line for projected segment
+    segment: hasProjection ? {
+      borderDash: function(ctx) {
+        var idx = ctx.p0DataIndex;
+        return isProjected[idx] || isProjected[idx + 1] ? [6, 3] : [];
+      }
+    } : undefined
+  }];
+
+  impactChart = new Chart(ctx, {
+    type: useBar ? 'bar' : 'line',
+    data: { labels: labels, datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      animation: { duration: 600, easing: 'easeInOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111827',
+          titleFont: { family: 'Inter', size: 13, weight: '600' },
+          bodyFont: { family: 'Inter', size: 13 },
+          padding: 12,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(ctx) {
+              var raw = ctx.raw;
+              if (cat.id === 'users' && raw >= 1) return raw + ' miljoen/week';
+              if (cat.id === 'water' && raw >= 100) return (raw / 1000).toFixed(1) + ' mld liter/jaar';
+              return raw + ' ' + cat.unit;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { family: 'Inter', size: 11 }, color: '#6B7280' }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: '#F3F4F6' },
+          ticks: {
+            font: { family: 'Inter', size: 11 },
+            color: '#6B7280',
+            callback: function(val) {
+              if (cat.id === 'users' && val >= 1000) return (val / 1000) + ' mln';
+              if (cat.id === 'market') return '$' + val + ' mld';
+              if (cat.id === 'water') return (val / 1000).toFixed(1) + ' mld';
+              return val + ' ' + cat.unit;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
 // --- Init ---
 document.addEventListener('DOMContentLoaded', () => {
   loadModels();
   showPage('home');
+  initImpactChart();
 });
