@@ -1,0 +1,106 @@
+{
+  "categories": [
+    {
+      "id": "energy",
+      "label": "Energieverbruik",
+      "unit": "TWh",
+      "color": "#D97706",
+      "bgColor": "rgba(217,119,6,0.1)",
+      "source": "IEA — Electricity 2024, Global Energy Review 2026, Data Centres & Data Transmission Networks 2023",
+      "description": "Wereldwijd elektriciteitsverbruik van datacenters, AI en cryptocurrency — in TWh per jaar. De IEA voorspelt een verdubbeling van 2025 naar 2030.",
+      "data": [
+        { "year": "2020", "value": 200 },
+        { "year": "2021", "value": 240 },
+        { "year": "2022", "value": 460 },
+        { "year": "2023", "value": 430 },
+        { "year": "2024", "value": 460 },
+        { "year": "2025", "value": 485 },
+        { "year": "2030", "value": 945, "projected": true }
+      ]
+    },
+    {
+      "id": "market",
+      "label": "Marktomvang",
+      "unit": "USD miljard",
+      "color": "#7C3AED",
+      "bgColor": "rgba(124,58,237,0.1)",
+      "source": "Grand View Research, MarketsAndMarkets, Bloomberg Intelligence",
+      "description": "Wereldwijde AI-marktomvang in miljarden USD. De verwachting is dat de markt tegen 2030 doorgroeit naar $827 miljard.",
+      "data": [
+        { "year": "2020", "value": 51 },
+        { "year": "2021", "value": 93 },
+        { "year": "2022", "value": 136 },
+        { "year": "2023", "value": 196 },
+        { "year": "2024", "value": 305 },
+        { "year": "2025", "value": 400 },
+        { "year": "2030", "value": 827, "projected": true }
+      ]
+    },
+    {
+      "id": "co2",
+      "label": "CO2-uitstoot",
+      "unit": "Mton CO2/jaar",
+      "color": "#16A34A",
+      "bgColor": "rgba(22,163,74,0.1)",
+      "source": "IEA — Electricity 2024, Global Energy Review 2026, Data Centres 2023; o.b.v. ~475 g CO2/kWh wereldwijd gemiddelde grid-intensiteit",
+      "description": "Jaarlijkse CO2-uitstoot van datacenters wereldwijd (inclusief AI, crypto en traditioneel) in megaton. Berekend op basis van IEA-energieverbruik × ~475 g CO2/kWh (wereldwijd gemiddeld; NL/EU = ~350 g/kWh). De uitstoot zal naar verwachting verdubbelen richting 2030.",
+      "data": [
+        { "year": "2020", "value": 95 },
+        { "year": "2021", "value": 114 },
+        { "year": "2022", "value": 219 },
+        { "year": "2023", "value": 204 },
+        { "year": "2024", "value": 219 },
+        { "year": "2025", "value": 230 },
+        { "year": "2030", "value": 449, "projected": true }
+      ]
+    },
+    {
+      "id": "users",
+      "label": "ChatGPT-gebruikers",
+      "unit": "miljoen/week",
+      "color": "#2563EB",
+      "bgColor": "rgba(37,99,235,0.1)",
+      "source": "OpenAI, Statista, Reuters",
+      "description": "Wekelijkse actieve gebruikers van ChatGPT. De app bereikte 100 miljoen gebruikers binnen 2 maanden — de snelst groeiende consumentenapp ooit. Medio 2025 passeerde het 500 miljoen.",
+      "data": [
+        { "year": "2022-11", "label": "Launch", "value": 0 },
+        { "year": "2023-01", "label": "Jan 2023", "value": 100 },
+        { "year": "2023-11", "label": "Nov 2023", "value": 100 },
+        { "year": "2024-06", "label": "Jun 2024", "value": 200 },
+        { "year": "2024-11", "label": "Dec 2024", "value": 300 },
+        { "year": "2025-02", "label": "Feb 2025", "value": 400 },
+        { "year": "2025-06", "label": "Jun 2025", "value": 500 }
+      ]
+    },
+    {
+      "id": "water",
+      "label": "Waterverbruik",
+      "unit": "miljard liter/jaar",
+      "color": "#0891B2",
+      "bgColor": "rgba(8,145,178,0.1)",
+      "source": "Li et al. 2023, UN University 2026, npj Clean Water 2021",
+      "description": "Geschat jaarlijks waterverbruik van AI-datacenters wereldwijd (in miljarden liters). UN University voorspelt dat het verbruik in 2030 gelijk staat aan het drinkwater van 1,3 miljard mensen.",
+      "data": [
+        { "year": "2020", "value": 800 },
+        { "year": "2021", "value": 950 },
+        { "year": "2022", "value": 1100 },
+        { "year": "2023", "value": 1400 },
+        { "year": "2024", "value": 1800 },
+        { "year": "2025", "value": 2200 },
+        { "year": "2030", "value": 6500, "projected": true }
+      ]
+    }
+  ],
+  "_meta": {
+    "description": "Gestructureerde data over de milieu- en economische impact van AI, 2020-2030. Gebruikt door de Prompt Impact AI Impact pagina.",
+    "lang": "nl",
+    "last_updated": "2025-06-20",
+    "notes": [
+      "Energieverbruik: IEA-cijfers voor datacenters wereldwijd (inclusief AI, crypto & traditioneel). 2030 is projectie.",
+      "Marktomvang: samengesteld uit Grand View Research, MarketsAndMarkets en Bloomberg Intelligence rapporten. 2025 en 2030 zijn projecties.",
+      "CO2-uitstoot: jaarlijkse datacenteruitstoot in megaton CO2, berekend op basis van IEA-energieverbruik × ~475 g CO2/kWh (wereldwijde gemiddelde grid-intensiteit). 2030 is projectie.",
+      "Gebruikers: ChatGPT wekelijkse actieve gebruikers zoals gerapporteerd door OpenAI en geanalyseerd door Statista/Reuters.",
+      "Waterverbruik: schattingen o.b.v. Li et al. 2023 en UN University 2026. 2030 is projectie."
+    ]
+  }
+}

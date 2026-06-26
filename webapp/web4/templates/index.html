@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt Impact</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- ============ SIDEBAR ============ -->
+  <nav class="sidebar">
+    <div class="sidebar-logo" onclick="showPage('home')">
+      <svg class="logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="1.8">
+        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
+        <path d="M7 12c0-2.8 2.2-5 5-5M12 7v10M12 17c2.8 0 5-2.2 5-5"/>
+      </svg>
+      <span class="logo-text">Prompt<br>Impact</span>
+    </div>
+    <div class="sidebar-nav">
+      <button class="nav-item active" id="nav-home" onclick="navTo('home')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </button>
+    </div>
+    <div class="sidebar-bottom">
+      <button class="nav-item" id="nav-ai-impact" onclick="navTo('ai-impact')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        AI Impact
+      </button>
+      <button class="nav-item" id="nav-over-ons" onclick="navTo('over-ons')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Over ons
+      </button>
+      <button class="nav-item" id="nav-bronnenlijst" onclick="navTo('bronnenlijst')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Bronnen
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+
+    <!-- PAGE: HOME -->
+    <div id="page-home" class="page active">
+      <div class="home-hero">
+        <p class="home-eyebrow">Educatief platform</p>
+        <h1 class="home-title">Hoeveel kost jouw <span class="accent-word">AI-prompt</span>?</h1>
+        <p class="home-sub">Elke tekstvraag aan een AI verbruikt energie, water en stoot CO2 uit. Ontdek de verborgen impact van jouw gebruik — en leer hoe je slimmer kunt prompten.</p>
+      </div>
+
+      <p class="choose-label">Kies een AI-model om te beginnen</p>
+      <div class="ai-cards" id="aiCards">
+        <div class="ai-card-placeholder">Modellen laden...</div>
+      </div>
+
+      <div class="home-stat-strip">
+        <div class="stat-item">
+          <span class="stat-num">10x</span>
+          <span class="stat-label">meer water dan een Google-zoekopdracht</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">~0,3 g</span>
+          <span class="stat-label">CO2 per simpele prompt</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">500 ml</span>
+          <span class="stat-label">water per 20-50 prompts</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">PUE 1.10</span>
+          <span class="stat-label">moderne datacenter-efficiëntie (Google, 2024)</span>
+        </div>
+      </div>
+
+      <p class="home-disclaimer">De getoonde cijfers zijn indicatieve schattingen op basis van wetenschappelijk onderzoek. De daadwerkelijke impact hangt af van het model, het datacenter en de energiebron.</p>
+    </div>
+
+    <!-- PAGE: AI PROMPT -->
+    <div id="page-ai" class="page ai-page">
+      <div class="ai-page-inner">
+        <button class="back-btn" onclick="showPage('home')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Terug
+        </button>
+        <div class="ai-header">
+          <div class="ai-brand-pill" id="ai-brand-pill"></div>
+          <h2 class="ai-tagline" id="ai-tagline"></h2>
+          <p class="ai-model-info" id="ai-model-info"></p>
+        </div>
+        <div class="input-wrap">
+          <input type="text" id="ai-prompt-input" class="prompt-input" placeholder="Stel je vraag..." />
+          <button class="send-btn" onclick="sendPrompt()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+        <div class="chips-section">
+          <p class="chips-label">Voorbeeldvragen (alleen tekst)</p>
+          <div class="chips-row">
+            <button class="chip" data-prompt="Wat is de hoofdstad van Frankrijk en hoe groot is de stad?">Wat is de hoofdstad van Frankrijk?</button>
+            <button class="chip" data-prompt="Leg het verschil uit tussen zonne-energie en windenergie.">Verschil zonne- en windenergie</button>
+            <button class="chip" data-prompt="Schrijf een samenvatting van 100 woorden over de waterschappen in Nederland.">Samenvatting over waterschappen</button>
+          </div>
+        </div>
+        <p class="ai-disclaimer">Deze tool berekent alleen de impact van tekstprompts, niet van het genereren van afbeeldingen, video of audio.</p>
+      </div>
+    </div>
+
+    <!-- PAGE: CHAT LOADING -->
+    <div id="page-chat" class="page">
+      <div class="chat-topbar">
+        <button class="back-btn" onclick="goBackFromChat()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Terug
+        </button>
+        <div id="chat-brand-bar" class="chat-brand-bar"></div>
+        <div style="width:80px"></div>
+      </div>
+      <div class="chat-area">
+        <div class="chat-messages">
+          <div class="user-bubble" id="chat-user-msg"></div>
+          <div class="typing-wrap">
+            <div class="typing-indicator"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+        <div class="chat-input-bar">
+          <input type="text" class="prompt-input" placeholder="" disabled />
+          <button class="send-btn" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: KOSTEN -->
+    <div id="page-kosten" class="page">
+      <div class="kosten-top">
+        <button class="back-btn" onclick="goBackFromCost()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Terug
+        </button>
+        <div class="kosten-context">
+          <span class="kosten-prompt-pill" id="kosten-prompt-text"></span>
+          <div id="kosten-brand-logo" class="kosten-ai-badge"></div>
+        </div>
+      </div>
+      <h2 class="kosten-heading">Impact van deze prompt</h2>
+      <p class="kosten-sub" id="kosten-summary"></p>
+
+      <!-- Efficiency badge -->
+      <div class="efficiency-badge" id="efficiency-badge"></div>
+
+      <div class="kosten-grid">
+        <div class="kosten-card elec-card">
+          <div class="kosten-card-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span class="kosten-card-label">Elektriciteit</span>
+          </div>
+          <div class="kosten-val" id="cost-elektriciteit-num"></div>
+          <div class="kosten-equiv" id="cost-elektriciteit-eq"></div>
+        </div>
+        <div class="kosten-card water-card">
+          <div class="kosten-card-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            <span class="kosten-card-label">Water</span>
+          </div>
+          <div class="kosten-val" id="cost-water-num"></div>
+          <div class="kosten-equiv" id="cost-water-eq"></div>
+        </div>
+        <div class="kosten-card co2-card">
+          <div class="kosten-card-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            <span class="kosten-card-label">CO2</span>
+          </div>
+          <div class="kosten-val" id="cost-co2-num"></div>
+          <div class="kosten-equiv" id="cost-co2-eq"></div>
+        </div>
+      </div>
+
+      <!-- Usage impact: daily/weekly/monthly -->
+      <div class="usage-section">
+        <h3 class="usage-heading">Impact bij regelmatig gebruik</h3>
+        <p class="usage-sub">Schatting o.b.v. <strong id="usage-prompts"></strong> prompts per dag van gemiddelde lengte:</p>
+        <div class="usage-toggle" id="usage-toggle" style="display:none;">
+          <button class="usage-toggle-btn active" id="usage-btn-user" onclick="switchUsageView('user')">Per gebruiker</button>
+          <button class="usage-toggle-btn" id="usage-btn-total" onclick="switchUsageView('total')">Totaal platform</button>
+        </div>
+        <div class="usage-grid" id="usage-grid"></div>
+      </div>
+
+      <!-- Comparison -->
+      <div class="comparison-section">
+        <h3>Wat kun je hiermee vergelijken?</h3>
+        <div class="comparison-list" id="comparison-list"></div>
+      </div>
+
+      <!-- Calculation details -->
+      <div class="calc-detail-box" id="calc-detail">
+        <h3 class="calc-detail-title">Hoe wordt dit berekend?</h3>
+        <div class="calc-detail-grid" id="calc-detail-grid"></div>
+      </div>
+
+      <p class="kosten-disclaimer">Dit is een indicatieve schatting op basis van gemiddelde NL/EU-stroommix (350 g CO2/kWh). De werkelijke impact hangt af van de actuele stroommix, het datacenter en de serverbelasting op het moment van je vraag.</p>
+
+      <button class="cta-btn" onclick="showPage('ontdek')">Ontdek wat je kunt doen</button>
+    </div>
+
+    <!-- PAGE: ONTDEK -->
+    <div id="page-ontdek" class="page">
+      <button class="back-btn" onclick="showPage('kosten')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Terug
+      </button>
+      <p class="section-eyebrow">Wat kun jij doen?</p>
+      <h2 class="section-heading">Verklein je digitale voetafdruk</h2>
+      <p class="section-sub">Kleine aanpassingen in hoe je AI gebruikt, maken een meetbaar verschil.</p>
+      <div class="ontdek-grid">
+        <div class="ontdek-card">
+          <div class="ontdek-card-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3 class="ontdek-card-title">Bewust prompten</h3>
+          <div class="ontdek-card-body">
+            <p>Hoe specifieker je prompt, hoe minder rekenkracht nodig is. Geef de AI duidelijke context en vermijd vage of te brede vragen. Een gerichte vraag van 10 woorden is vaak effectiever dan een onsamenhangende alinea.</p>
+          </div>
+          <p class="ontdek-card-foot">Kortere, duidelijkere prompts = minder energie per antwoord.</p>
+        </div>
+        <div class="ontdek-card">
+          <div class="ontdek-card-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M2 22c1.25-4.12 4.37-8.24 8.5-10C13.38 10.76 15 7.5 15 4c0 0 3 1.5 3 6c0 4.5-3 8-6.5 10.5C8.91 22.09 4.88 21.64 2 22z"/></svg>
+          </div>
+          <h3 class="ontdek-card-title">Kies het juiste model</h3>
+          <div class="ontdek-card-body">
+            <p>Voor een simpele vraag heb je niet het zwaarste model nodig. Gebruik kleinere modellen (zoals Gemini Flash, ChatGPT Mini of Claude Haiku) voor alledaagse taken. Die zijn vaak 5-20x zuiniger.</p>
+          </div>
+          <p class="ontdek-card-foot">Niet elke vraag heeft het vlaggenschipmodel nodig.</p>
+        </div>
+        <div class="ontdek-card">
+          <div class="ontdek-card-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>
+          </div>
+          <h3 class="ontdek-card-title">Combineer je vragen</h3>
+          <div class="ontdek-card-body">
+            <p>In plaats van 3 losse vragen te stellen, combineer je ze in een prompt. Dat bespaart de AI twee extra berekeningen. Elke nieuwe prompt start een volledig nieuw inferentieproces.</p>
+          </div>
+          <p class="ontdek-card-foot">Gebundelde prompts = minder serverrondes = minder impact.</p>
+        </div>
+      </div>
+      <div class="ontdek-actions">
+        <button class="cta-btn" onclick="showPage('quiz')">Test je kennis</button>
+        <button class="cta-btn cta-btn-outline" onclick="showPage('home')">Probeer een ander model</button>
+      </div>
+    </div>
+
+    <!-- PAGE: QUIZ -->
+    <div id="page-quiz" class="page">
+      <button class="back-btn" onclick="showPage('ontdek')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Terug
+      </button>
+      <p class="section-eyebrow">Kennistest</p>
+      <h2 class="section-heading">Weet jij het antwoord?</h2>
+
+      <div class="quiz-name-wrap" id="quiz-name-wrap">
+        <label class="quiz-name-label" for="quiz-name-input">Naam (optioneel)</label>
+        <input type="text" id="quiz-name-input" class="quiz-name-input" placeholder="Laat leeg voor anoniem" maxlength="60" />
+        <button class="cta-btn" id="quiz-start-btn" onclick="startQuiz()">Start de test</button>
+      </div>
+
+      <div id="quiz-body" style="display:none;">
+        <div class="quiz-progress">
+          <div class="progress-bar"><div class="progress-fill" id="quiz-progress-fill"></div></div>
+          <span class="progress-label" id="quiz-progress-label">Vraag 1 van 3</span>
+        </div>
+        <div class="quiz-card">
+          <p class="quiz-question" id="quiz-question"></p>
+          <div class="quiz-options" id="quiz-options"></div>
+          <div class="quiz-feedback" id="quiz-feedback"></div>
+          <div class="quiz-nav">
+            <button class="quiz-next-btn" id="quiz-next-btn" onclick="nextQuestion()" style="display:none">Volgende vraag</button>
+          </div>
+        </div>
+      </div>
+      <div id="quiz-end" style="display:none;">
+        <div class="quiz-score-card" id="quiz-score-card"></div>
+        <div class="quiz-end-actions">
+          <button class="cta-btn" onclick="showPage('home')">Probeer een ander model</button>
+          <button class="cta-btn cta-btn-outline" onclick="showPage('ontdek')">Terug naar tips</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: AI IMPACT -->
+    <div id="page-ai-impact" class="page">
+      <button class="back-btn" onclick="showPage('home')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Terug
+      </button>
+      <p class="section-eyebrow">Data & Onderzoek</p>
+      <h2 class="section-heading">De impact van AI in de afgelopen jaren</h2>
+      <p class="section-sub">Hoe AI razendsnel groeide — en wat dat betekent voor energie, water, CO2 en de economie. Gebaseerd op data van IEA, UN University, MIT, en peer-reviewed onderzoek.</p>
+
+      <!-- Key stat banner -->
+      <div class="impact-stat-banner">
+        <div class="impact-stat-item">
+          <span class="impact-stat-num">460 → 945</span>
+          <span class="impact-stat-label">TWh datacenterverbruik (2022 → 2030)</span>
+        </div>
+        <div class="impact-stat-divider"></div>
+        <div class="impact-stat-item">
+          <span class="impact-stat-num">284.000</span>
+          <span class="impact-stat-label">kg CO2 voor training van 1 groot model</span>
+        </div>
+        <div class="impact-stat-divider"></div>
+        <div class="impact-stat-item">
+          <span class="impact-stat-num">1,3 miljard</span>
+          <span class="impact-stat-label">mensen: waterverbruik AI-datacenters in 2030</span>
+        </div>
+      </div>
+
+      <!-- Section 1: Energy Growth -->
+      <div class="impact-section">
+        <h3 class="impact-section-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Energieverbruik: Een stijgende lijn
+        </h3>
+        <div class="impact-grid-cols">
+          <div class="impact-card">
+            <div class="impact-card-year">2022</div>
+            <div class="impact-card-value">460 TWh</div>
+            <div class="impact-card-desc">Wereldwijd datacenter-, AI- en cryptoverbruik — ~2% van de totale wereldwijde elektriciteitsvraag.</div>
+            <div class="impact-card-source">Bron: IEA, <em>Data Centres and Data Transmission Networks</em>, 2023</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-card-year">2025</div>
+            <div class="impact-card-value">485 TWh</div>
+            <div class="impact-card-desc">Datacenters alleen al droegen ~50% bij aan de Amerikaanse elektriciteitsgroei. AI-specifieke datacenters groeiden 3× sneller dan traditionele.</div>
+            <div class="impact-card-source">Bron: IEA, <em>Global Energy Review</em>, april 2026</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-card-year">2026</div>
+            <div class="impact-card-value">~650 TWh</div>
+            <div class="impact-card-desc">IEA voorspelde in het slechtste scenario dat het verbruik richting 1000 TWh zou stijgen — vergelijkbaar met het totale verbruik van Japan.</div>
+            <div class="impact-card-source">Bron: IEA, <em>Electricity 2024 Report</em></div>
+          </div>
+          <div class="impact-card impact-card-highlight">
+            <div class="impact-card-year">2030</div>
+            <div class="impact-card-value">~945 TWh</div>
+            <div class="impact-card-desc">Datacenters zullen ~3% van de wereldwijde elektriciteit gebruiken. Een verdubbeling in slechts 5 jaar ten opzichte van 2025.</div>
+            <div class="impact-card-source">Bron: IEA & UN University, <em>AI Environmental Cost Report</em>, 2026</div>
+          </div>
+        </div>
+        <div class="impact-chart-note">De groei wordt gedreven door zowel meer datacenters als krachtigere AI-chips — NVIDIA's H100 verbruikt tot 700W per stuk; 100.000 stuks = ~70 MW piekvermogen.</div>
+      </div>
+
+      <!-- Section 2: Water -->
+      <div class="impact-section">
+        <h3 class="impact-section-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          Waterverbruik: niet alleen stroom, ook water
+        </h3>
+        <div class="impact-grid-cols">
+          <div class="impact-card">
+            <div class="impact-card-year">2023</div>
+            <div class="impact-card-value">~500 ml</div>
+            <div class="impact-card-desc">Elke 20-50 prompts van een gemiddeld groot taalmodel verbruikte ~500 ml water voor datacenter-koeling.</div>
+            <div class="impact-card-source">Bron: Li et al., <em>Making AI Less "Thirsty"</em>, UC Riverside, 2023</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-card-year">2024</div>
+            <div class="impact-card-value">Miljoenen liters/dag</div>
+            <div class="impact-card-desc">Grote AI-datacentra verbruikten dagelijks miljoenen liters water — vergelijkbaar met kleine steden.</div>
+            <div class="impact-card-source">Bron: Google, <em>Environmental Report 2024</em>; npj Clean Water, 2021</div>
+          </div>
+          <div class="impact-card impact-card-highlight">
+            <div class="impact-card-year">2030</div>
+            <div class="impact-card-value">13× hamburgers</div>
+            <div class="impact-card-desc">Datacenter-waterverbruik zal gelijk staan aan het jaarlijkse basis-drinkwater van 1,3 miljard mensen. Landgebruik: >14.500 km².</div>
+            <div class="impact-card-source">Bron: UN University, <em>Environmental Costs of AI</em>, juni 2026</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-card-year">Per prompt</div>
+            <div class="impact-card-value">~10-50 ml</div>
+            <div class="impact-card-desc">Een gemiddelde tekstprompt verbruikt 10-50 ml water via datacenterkoeling. Sommige datacenters (Google) gebruiken zeewater om drinkwater te sparen.</div>
+            <div class="impact-card-source">Bron: Luccioni et al., <em>Power Hungry Processing</em>, 2024</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: CO2 -->
+      <div class="impact-section">
+        <h3 class="impact-section-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          CO₂-uitstoot: Van training tot dagelijks gebruik
+        </h3>
+        <div class="impact-grid-cols">
+          <div class="impact-card">
+            <div class="impact-card-year">2019</div>
+            <div class="impact-card-value">284 ton CO₂</div>
+            <div class="impact-card-desc">Training van een enkel groot NLP-model via neural architecture search stootte ~284 ton CO₂ uit — 5× de levensduuruitstoot van een gemiddelde auto.</div>
+            <div class="impact-card-source">Bron: Strubell et al., <em>Energy and Policy Considerations for Deep Learning in NLP</em>, UMass Amherst, 2019</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-card-year">2020-2023</div>
+            <div class="impact-card-value">40-48× meer</div>
+            <div class="impact-card-desc">GPT-4 was slechts 10× groter dan GPT-3 maar verbruikte 40-48× meer energie tijdens training — efficiëntiewinst kon de schaalgroei niet bijbenen.</div>
+            <div class="impact-card-source">Bron: MIT Technology Review; OpenAI technische rapporten</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-card-year">2024</div>
+            <div class="impact-card-value">~0,3 g CO₂/prompt</div>
+            <div class="impact-card-desc">Gemiddelde tekstuele prompt aan een groot taalmodel stoot ~0,3 gram CO₂ uit. Bij 10M+ dagelijkse queries loopt dit snel op tot tonnen per dag.</div>
+            <div class="impact-card-source">Bron: Luccioni et al., <em>Power Hungry Processing</em>, 2024</div>
+          </div>
+          <div class="impact-card impact-card-highlight">
+            <div class="impact-card-year">Per gebruiker</div>
+            <div class="impact-card-value">~55 kg CO₂/jaar</div>
+            <div class="impact-card-desc">Een actieve gebruiker (5 prompts/dag) stoot ~55 kg CO₂ per jaar uit — vergelijkbaar met ~460 km autorijden. Voor een platform met >10M gebruikers is dit ~550 kton CO₂/jaar.</div>
+            <div class="impact-card-source">Bron: Prompt Impact berekening o.b.v. IEA & Luccioni et al. data</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Market & Users -->
+      <div class="impact-section">
+        <h3 class="impact-section-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+          Marktgroei & Gebruikers: Exponentiële adoptie
+        </h3>
+        <div class="impact-grid-cols">
+          <div class="impact-card">
+            <div class="impact-card-year">2020</div>
+            <div class="impact-card-value">$51 mld</div>
+            <div class="impact-card-desc">Wereldwijde AI-markt bedroeg ~$51 miljard — voornamelijk enterprise-software en onderzoek.</div>
+            <div class="impact-card-source">Bron: Grand View Research, MarketsAndMarkets</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-card-year">2022</div>
+            <div class="impact-card-value">100M gebruikers</div>
+            <div class="impact-card-desc">ChatGPT bereikte 100 miljoen gebruikers in slechts 2 maanden na lancering — de snelst groeiende consumentenapp ooit. AI-markt: ~$136 miljard.</div>
+            <div class="impact-card-source">Bron: Reuters; OpenAI; Statista</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-card-year">2024</div>
+            <div class="impact-card-value">$305 mld | 200M+</div>
+            <div class="impact-card-desc">AI-markt verdubbelde in 2 jaar naar $305 miljard. ChatGPT: 200M+ wekelijkse gebruikers. NVIDIA's datacenteromzet: $47,5 miljard (10× groei sinds 2022).</div>
+            <div class="impact-card-source">Bron: Grand View Research; NVIDIA FY2024 earnings; OpenAI</div>
+          </div>
+          <div class="impact-card impact-card-highlight">
+            <div class="impact-card-year">2025-2030</div>
+            <div class="impact-card-value">$827 mld | 500M+</div>
+            <div class="impact-card-desc">AI-markt voorspeld op $827 miljard in 2030. ChatGPT: 500M+ wekelijkse gebruikers medio 2025. NVIDIA's jaarlijkse GPU-leveringen overschrijden 1,5M+ eenheden.</div>
+            <div class="impact-card-source">Bron: Grand View Research; OpenAI; NVIDIA; Bloomberg Intelligence</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactieve grafieken -->
+      <div class="impact-section">
+        <h3 class="impact-section-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Interactieve grafieken
+        </h3>
+        <p class="impact-chart-sub" id="impact-chart-sub">Klik op een categorie om de grafiek te bekijken.</p>
+
+        <div class="chart-tabs" id="chart-tabs">
+          <!-- Tabs worden dynamisch gevuld -->
+        </div>
+
+        <div class="chart-wrapper">
+          <canvas id="impactChart" width="800" height="400"></canvas>
+        </div>
+
+        <p class="impact-chart-source" id="impact-chart-source"></p>
+        <p class="impact-chart-note">Gestippelde lijn = projectie. Hover over datapunten voor details.</p>
+      </div>
+
+      <!-- Bronnen-lijst -->
+      <div class="impact-section">
+        <h3 class="impact-section-title">Bronnen & Verantwoording</h3>
+        <ul class="source-list">
+          <li class="source-item"><span class="source-tag">IEA</span> International Energy Agency — <em>Electricity 2024</em> & <em>Global Energy Review 2026</em></li>
+          <li class="source-item"><span class="source-tag">UN</span> United Nations University — <em>Environmental Costs of AI: Carbon, Water and Land Footprints</em>, 2026</li>
+          <li class="source-item"><span class="source-tag">MIT</span> MIT Technology Review — diverse artikelen over AI energy consumption, 2023-2025</li>
+          <li class="source-item"><span class="source-tag">Paper</span> Strubell et al. — <em>Energy and Policy Considerations for Deep Learning in NLP</em>, UMass Amherst, 2019</li>
+          <li class="source-item"><span class="source-tag">Paper</span> Luccioni et al. — <em>Power Hungry Processing: Watts Driving the Cost of AI Deployment?</em>, 2024</li>
+          <li class="source-item"><span class="source-tag">Paper</span> Li et al. — <em>Making AI Less "Thirsty": Uncovering and Addressing the Secret Water Footprint</em>, UC Riverside, 2023</li>
+          <li class="source-item"><span class="source-tag">Nature</span> Nature — <em>The Carbon Footprint of Machine Learning</em>, 2022</li>
+          <li class="source-item"><span class="source-tag">Industry</span> Google — <em>Environmental Report 2024</em>; NVIDIA — <em>FY2024 Annual Report</em>; OpenAI & Statista — gebruikersdata</li>
+          <li class="source-item"><span class="source-tag">Analyst</span> Grand View Research, MarketsAndMarkets, Bloomberg Intelligence — marktprognoses</li>
+        </ul>
+      </div>
+
+      <p class="home-disclaimer" style="margin-top: 16px;">De getoonde cijfers zijn schattingen en projecties op basis van de best beschikbare bronnen. Daadwerkelijke impact varieert per datacenter, energiemix, en technologie. Deze pagina wordt periodiek bijgewerkt.</p>
+    </div>
+
+    <!-- PAGE: OVER ONS -->
+    <div id="page-over-ons" class="page">
+      <button class="back-btn" onclick="showPage('home')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Terug
+      </button>
+      <p class="section-eyebrow">Over het project</p>
+      <h2 class="section-heading">Over ons</h2>
+      <p class="body-text">
+        Prompt Impact is ontwikkeld binnen de opleiding HBO-ICT van Zuyd Hogeschool als onderdeel van de casus
+        <strong>Duurzame Technologie in Beeld</strong> binnen het Optimize-project.
+      </p>
+      <p class="body-text">
+        Steeds meer mensen maken gebruik van AI-tools zoals ChatGPT, Claude en Gemini. Hoewel deze technologie
+        veel voordelen biedt, zijn veel gebruikers zich niet bewust van de energie, het waterverbruik en de
+        CO2-uitstoot die gepaard kunnen gaan met het gebruik van AI. Met Prompt Impact willen wij deze informatie
+        op een begrijpelijke en toegankelijke manier zichtbaar maken.
+      </p>
+      <p class="body-text">
+        Onze oplossing bestaat uit een interactieve webapplicatie waarmee bezoekers inzicht krijgen in de
+        mogelijke milieu-impact van hun AI-gebruik. Door middel van voorbeelden, vergelijkingen en praktische
+        uitleg willen wij bijdragen aan meer bewustwording rondom digitale duurzaamheid.
+      </p>
+      <h2>Over de casus</h2>
+      <p class="body-text">
+        Deze applicatie is ontwikkeld voor de casus <strong>Duurzame Technologie in Beeld</strong> van het
+        Lectoraat Data Intelligence van Zuyd Hogeschool. Het doel is om complexe technologieen begrijpelijk
+        te maken voor een breed publiek en bewustwording te creeren rondom duurzaamheid.
+      </p>
+      <h2>Projectteam</h2>
+      <p class="body-text">Deze applicatie is ontwikkeld door:</p>
+      <ul class="body-text">
+        <li>Yusuf Isaag</li>
+        <li>Feras Alnabwani</li>
+        <li>Jeffrey Roering</li>
+        <li>Ivan Cheng</li>
+      </ul>
+      <p class="body-text">Studenten HBO-ICT aan Zuyd Hogeschool.</p>
+      <h2>Disclaimer</h2>
+      <p class="body-text">
+        De weergegeven cijfers over energieverbruik, waterverbruik en CO2-uitstoot zijn indicatieve schattingen
+        gebaseerd op beschikbare onderzoeken en openbare bronnen (Luccioni et al. 2024, Google Environmental Reports,
+        Anthropic disclosures, DeepSeek technical reports). De daadwerkelijke impact kan verschillen afhankelijk
+        van het gebruikte AI-model, de infrastructuur en de omvang van de opdracht.
+      </p>
+    </div>
+
+    <!-- PAGE: BRONNENLIJST -->
+    <div id="page-bronnenlijst" class="page">
+      <button class="back-btn" onclick="showPage('home')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Terug
+      </button>
+      <p class="section-eyebrow">Literatuur</p>
+      <h2 class="section-heading">Bronnenlijst</h2>
+      <ul class="source-list">
+        <li class="source-item">
+          <span class="source-tag">Energie</span>
+          Luccioni et al. — <em>Power Hungry Processing: Watts Driving the Cost of AI Deployment?</em>, 2024
+        </li>
+        <li class="source-item">
+          <span class="source-tag">CO2</span>
+          Strubell et al. — <em>Energy and Policy Considerations for Deep Learning in NLP</em>, UMass Amherst, 2019
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Water</span>
+          Li et al. — <em>Making AI Less "Thirsty": Uncovering the Secret Water Footprint</em>, UC Riverside, 2023
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Energie</span>
+          IEA — <em>Electricity 2024 Report</em>
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Energie</span>
+          IEA — <em>Data Centres and Data Transmission Networks</em>, 2023
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Energie</span>
+          IEA — <em>Global Energy Review</em>, april 2026
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Water</span>
+          UN University — <em>Environmental Costs of AI: Carbon, Water and Land Footprints</em>, 2026
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Water</span>
+          npj Clean Water — <em>Data centre water consumption</em>, 2021
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Algemeen</span>
+          Nature — <em>The Carbon Footprint of Machine Learning</em>, 2022
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Algemeen</span>
+          MIT Technology Review — diverse artikelen AI energy consumption, 2023–2025
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Infrastructuur</span>
+          Google — <em>Environmental Report 2024</em> (PUE & water data)
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Infrastructuur</span>
+          NVIDIA — <em>FY2024 Annual Report</em> (datacenter omzet & GPU leveringen)
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Training</span>
+          OpenAI — technische rapporten GPT-3 & GPT-4 (trainingsenergie)
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Markt</span>
+          Grand View Research, MarketsAndMarkets, Bloomberg Intelligence — AI marktprognoses
+        </li>
+        <li class="source-item">
+          <span class="source-tag">Gebruikers</span>
+          Statista, Reuters, OpenAI — ChatGPT gebruikersgroei 2022–2025
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
